@@ -1,0 +1,28 @@
+# Netscape HTTP Cookie File
+# http://curl.haxx.se/rfc/cookie_spec.html
+# This is a generated file!  Do not edit.
+
+.login.taobao.com	TRUE	/	FALSE	1530022980	lc	VynJqh%2Fex8ISvgkD2sGXjw%3D%3D
+.login.taobao.com	TRUE	/	FALSE	1558966980	lid	miyayeh3344
+.login.taobao.com	TRUE	/	FALSE	1530022980	log	lty=Ug%3D%3D
+.taobao.com	TRUE	/	FALSE	1558966980	_cc_	UIHiLt3xSw%3D%3D
+.taobao.com	TRUE	/	FALSE		_l_g_	Ug%3D%3D
+.taobao.com	TRUE	/	FALSE		_nk_	miyayeh3344
+.taobao.com	TRUE	/	FALSE		_tb_token_	3eae85bbe1a57
+.taobao.com	TRUE	/	FALSE		cookie1	BvBSNDCEonDwwNq1C8QzYeuoSb7Spt3UEr0Xbkkd3E4%3D
+.taobao.com	TRUE	/	FALSE		cookie17	UNkzJYtz2x%2B6HA%3D%3D
+.taobao.com	TRUE	/	FALSE		cookie2	21574a45a3524cc919292a62bb8aa315
+.taobao.com	TRUE	/	FALSE		csg	f1271030
+.taobao.com	TRUE	/	FALSE		dnk	miyayeh3344
+.taobao.com	TRUE	/	FALSE		existShop	MTUyNzQzMDk4MA%3D%3D
+.taobao.com	TRUE	/	FALSE	1530022980	lgc	miyayeh3344
+.taobao.com	TRUE	/	FALSE	1528035780	mt	np=
+.taobao.com	TRUE	/	FALSE		sg	459
+.taobao.com	TRUE	/	FALSE		skt	a4425c8a0f3e186c
+.taobao.com	TRUE	/	FALSE	1535206980	t	02a72bb71ace8902659a3aeadc8effb2
+.taobao.com	TRUE	/	FALSE	1581430980	tg	5
+.taobao.com	TRUE	/	FALSE	1558966980	tracknick	miyayeh3344
+.taobao.com	TRUE	/	FALSE		uc1	cookie14=UoTeOZBbcCJbXw%3D%3D&lng=zh_CN&cookie16=Vq8l%2BKCLySLZMFWHxqs8fwqnEw%3D%3D&existShop=false&cookie21=Vq8l%2BKCLiYYu&tag=8&cookie15=UtASsssmOIJ0bQ%3D%3D&pas=0
+.taobao.com	TRUE	/	FALSE	1530022980	uc3	nk2=Dlklj7o9QbLYe9c%3D&id2=UNkzJYtz2x%2B6HA%3D%3D&vt3=F8dBzrwKTCF6gR4b9EE%3D&lg2=WqG3DMC9VAQiUQ%3D%3D
+.taobao.com	TRUE	/	FALSE		unb	3946103115
+.taobao.com	TRUE	/	FALSE		v	0

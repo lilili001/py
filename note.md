@@ -188,3 +188,22 @@ find_all(name,attrs,string)
 实例：抓取百度百科python词条页面以及相关页面的数据
 
 快速引入模块 和 创建类  alt+enter
+
+## 多线程
+
+threading.active_count() //当前激活的线程数量
+threading.enumerate() //查看当程是哪几个
+threading.current_thread() //查看当前运行的是哪个进程
+
+创建一个进程
+
+import threading
+
+def thread_job():
+    print('This is a new thread, thread name is %s' % threading.current_thread() )
+
+new_thread = threading.Thread(target=thread_job,name="T1")
+new_thread.start()
+new_thread.join() //进程本身都是同时进行的，如果想要后续程序在当前进程完成后运行 则需要 join()
+
+lock的作用是 当多个进程同时进行的时候 让进程按顺序执行 这样不会乱
