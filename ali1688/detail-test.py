@@ -13,12 +13,13 @@ from http import cookiejar
 
 ua = UserAgent()
 
-headers = {'Accept': '*/*',
+headers = {
+                'Accept': '*/*',
                'Accept-Language': 'en-US,en;q=0.8',
                'Cache-Control': 'max-age=0',
                'User-Agent': ua.random,
                'Connection': 'keep-alive',
-               'Referer': 'https://detail.1688.com/offer/523819601189.html'
+
                }
 
 def get_random_ip():
@@ -66,9 +67,9 @@ f1.truncate()
 
 print('cleared========')
 
-url = 'https://detail.1688.com/offer/540424293523.html'
-#url = 'https://www.baidu.com'
-start_validate_https(url,5)
+#url = 'https://detail.1688.com/offer/540424293523.html'
+url = 'https://www.1688.com'
+#start_validate_https(url,5)
 ips = get_data_from_file()
 
 
@@ -77,23 +78,27 @@ ips = get_data_from_file()
 #声明一个CookieJar对象实例来保存cookie
 cookiejar = cookiejar.CookieJar()
 
+random_ip = (random.choice(ips)).replace('\x00','')
+proxy_ip={'http': random_ip}  #想验证的代理IP
+
+proxy_support = urllib.request.ProxyHandler(proxy_ip)
 #利用urllib.request库的HTTPCookieProcessor对象来创建cookie处理器,也就CookieHandler
 cookieHandler = request.HTTPCookieProcessor(cookiejar)
-
-
-proxy_ip={'http': (random.choice(ips)).replace('\n','')}  #想验证的代理IP
-print(proxy_ip)
-proxy_support = urllib.request.ProxyHandler(proxy_ip)
 opener = urllib.request.build_opener(cookieHandler)
-#opener.add_handler(proxy_support)
+opener.add_handler(proxy_support)
 
 opener.addheaders=[("User-Agent",ua.random)]
 urllib.request.install_opener(opener)
 
+req0 = request.Request(url,None,headers)
+
+res = opener.open(req0)
+print(res.read().decode('gbk'))
+
 # response = urllib.request.urlopen(url)
-# print(response.read())
+# print(response.read().decode('utf-8'))
 #print(urllib.request.urlopen(url).read())
 
 
-response = requests.get(url,proxies=proxy_ip,timeout=3)
-print(response.text)
+# response = requests.get(url,proxies=proxy_ip,timeout=3)
+# print(response.text)
