@@ -115,7 +115,16 @@ def parse_detail(content=None , filename=None ,detail_page_url=None ,writer=None
 
     res['sizes'] = ','.join(res['sizes'])
 
-    writer.writerow((res['title'], res['price'], filename , res['supplier'] ,  res['colors'] , res['sizes'] , res['delivery-addr']  ))
+    writer.writerow((
+                     res['title'],
+                     res['price'],
+                     filename ,
+                     res['supplier'] ,
+                     res['colors'] ,
+                     res['sizes'] ,
+                     res['delivery-addr'],
+                     detail_page_url,
+     ))
 
     print(res)
     return res

@@ -50,7 +50,7 @@ class SpiderMain(object):
 
         csvfile = open(root_path + '/files/data.csv', 'w', newline='')
         writer = csv.writer(csvfile)
-        writer.writerow(('title', 'price', 'filedir', 'supplier', 'colors', 'sizes', 'delivery-addr'))
+        writer.writerow(('title', 'price', 'filedir', 'supplier', 'colors', 'sizes', 'delivery-addr' ,'supplier_url' ))
 
         count = 1
 
