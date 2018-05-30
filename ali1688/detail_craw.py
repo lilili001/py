@@ -81,6 +81,8 @@ def parse_detail(content=None , filename=None ,detail_page_url=None ,writer=None
     title_node = soup.find('h1', class_="d-title")
     res['title'] =  (title_node.get_text())\
         .replace('ebay','')\
+        .replace('EBAY','')\
+        .replace('Ebay','')\
         .replace('欧美','')\
         .replace('2017','')\
         .replace('速卖通','')\

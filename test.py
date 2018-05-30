@@ -1,5 +1,6 @@
 import datetime
 import json
+import math
 import re
 import time
 from urllib.request import urlretrieve
@@ -49,9 +50,9 @@ def delete_proxy(proxy):
 
 # your spider code
 
-csvfile = open(root_path + '/ali1688/files/data.csv', 'w', newline='')
-writer = csv.writer(csvfile)
-writer.writerow(('title', 'price', 'filedir' ,'supplier' , 'colors' , 'sizes' , 'delivery-addr' ))
+# csvfile = open(root_path + '/ali1688/files/data.csv', 'w', newline='')
+# writer = csv.writer(csvfile)
+# writer.writerow(('title', 'price', 'filedir' ,'supplier' , 'colors' , 'sizes' , 'delivery-addr' ))
 
 def getHtml():
 
@@ -217,11 +218,38 @@ proxy = get_proxy()
 #
 # print(temp)
 
-str = '中华人名共和国'
-
-print( str.replace('中华' , '中国') )
+# str = '中华人名共和国'
+#
+# print( str.replace('中华' , '中国') )
 
 # reg = r'https.*?\.jpg'
 # image = re.compile(reg)
 # imgList = re.findall(image, str)
 # print(imgList)
+
+
+def changeTime(allTime):
+    day = 24*60*60
+    hour = 60*60
+    min = 60
+    if allTime <60:
+        return  "%d sec"%math.ceil(allTime)
+    elif  allTime > day:
+        days = divmod(allTime,day)
+        return "%d days, %s"%(int(days[0]),changeTime(days[1]))
+    elif allTime > hour:
+        hours = divmod(allTime,hour)
+        return '%d hours, %s'%(int(hours[0]),changeTime(hours[1]))
+    else:
+        mins = divmod(allTime,min)
+        return "%d mins, %d sec"%(int(mins[0]),math.ceil(mins[1]))
+
+
+start = datetime.datetime.now()
+time.sleep(5)
+end = datetime.datetime.now()
+end2 = start + datetime.timedelta(hours=10.5)
+
+used_time = (end2-start)
+alltime = used_time.seconds
+print(changeTime(alltime))

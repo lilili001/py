@@ -163,7 +163,22 @@ urllib2.urlopen(request)
     urllib2.install_opener(opener)
     #使用带有cookie的urllib2访问网页
     response = urllib2.urlopen("http://www.baidu.com")
-    
+
+或者:
+    ua = UserAgent()
+    proxy = detail_craw.get_proxy()
+    proxy_handler = request.ProxyHandler({"http":"http://{}".format(proxy)})
+    opener = request.build_opener(proxy_handler)
+    req = request.Request(url)
+    req.add_header('User-Agent',ua.random)
+    r = opener.open(req)
+
+
+网页下载器之requests:
+    html = requests.get(detail_page_url, proxies={"http":"http://{}".format(proxy) } ,headers=headers )
+    content = html.text
+
+
 # 网页解析器
 + 正则:模糊匹配
 + html.parser：结构化解析 
@@ -207,3 +222,43 @@ new_thread.start()
 new_thread.join() //进程本身都是同时进行的，如果想要后续程序在当前进程完成后运行 则需要 join()
 
 lock的作用是 当多个进程同时进行的时候 让进程按顺序执行 这样不会乱
+
+## 计算时间差
+
+    def changeTime(allTime):
+        day = 24*60*60
+        hour = 60*60
+        min = 60
+        if allTime <60:
+            return  "%d sec"%math.ceil(allTime)
+        elif  allTime > day:
+            days = divmod(allTime,day)
+            return "%d days, %s"%(int(days[0]),changeTime(days[1]))
+        elif allTime > hour:
+            hours = divmod(allTime,hour)
+            return '%d hours, %s'%(int(hours[0]),changeTime(hours[1]))
+        else:
+            mins = divmod(allTime,min)
+            return "%d mins, %d sec"%(int(mins[0]),math.ceil(mins[1]))
+
+
+    start = datetime.datetime.now()
+    time.sleep(5)
+    end = datetime.datetime.now()
+    end2 = start + datetime.timedelta(hours=10.5)
+
+    used_time = (end2-start)
+    alltime = used_time.seconds
+    print(changeTime(alltime))
+
+# 使用模块
+googletrans,datetime
+
+# csv 文件读取
+    r = csv.reader(open('files/data.csv')) # 返回列表
+
+  文件写入
+    new_csv = open('files/data_new.csv','w')
+    writer = csv.writer(new_csv)
+    writer.writerows(lines)
+    new_csv.close()
