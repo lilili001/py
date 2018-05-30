@@ -271,3 +271,10 @@ googletrans,datetime
     https://www.cnblogs.com/jianqingwang/p/6978724.html
 
     不需要visualstudio
+
+# 正则替换
+    str = "促销 女装背带性感伴娘晚礼服 交叉露背亮片Wish连衣裙"
+    reg = r'[促销|wish]'
+    pattern = re.compile(reg,re.IGNORECASE)
+    out = re.sub(pattern , '',str )
+    print(out) #女装背带性感伴娘晚礼服 交叉露背亮片连衣裙

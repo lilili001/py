@@ -13,6 +13,8 @@ from urllib import error
 import os
 import csv
 
+from ali1688.helper import str_replace_new
+
 root_path = os.path.abspath('.')
 ua = UserAgent()
 
@@ -79,16 +81,7 @@ def parse_detail(content=None , filename=None ,detail_page_url=None ,writer=None
 
     # title
     title_node = soup.find('h1', class_="d-title")
-    res['title'] =  (title_node.get_text())\
-        .replace('ebay','')\
-        .replace('EBAY','')\
-        .replace('Ebay','')\
-        .replace('欧美','')\
-        .replace('2017','')\
-        .replace('速卖通','')\
-        .replace('爆款','')\
-        .replace('2018','')\
-        .replace('亚马逊','')
+    res['title'] = str_replace_new(title_node.get_text())
 
     # price
     price_node = soup.find('table',class_='table-sku').find('td',class_='price').find('em',class_='value')

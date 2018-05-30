@@ -2,6 +2,9 @@ import csv
 
 from googletrans import Translator
 
+from ali1688.helper import str_replace_new
+
+
 def startTranslate():
     translator = Translator()
     lines = []
@@ -11,7 +14,7 @@ def startTranslate():
     for row in r:
         print(row)
         temp_line = row
-        temp_line[0] = translator.translate( row[0] ).text
+        temp_line[0] = str_replace_new(translator.translate( row[0] ).text)
         temp_line[4] = translator.translate( row[4] ).text
         lines.append(temp_line)
 

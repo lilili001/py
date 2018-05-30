@@ -252,4 +252,9 @@ end2 = start + datetime.timedelta(hours=10.5)
 
 used_time = (end2-start)
 alltime = used_time.seconds
-print(changeTime(alltime))
+
+str = "促销 女装背带性感伴娘晚礼服 交叉露背亮片Wish连衣裙"
+reg = r'[促销|wish]'
+pattern = re.compile(reg,re.IGNORECASE)
+out = re.sub(pattern , '',str )
+print(out) #女装背带性感伴娘晚礼服 交叉露背亮片连衣裙

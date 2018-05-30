@@ -50,9 +50,10 @@ class SpiderMain(object):
         allTime = (endTime-startTime).seconds
         usedTime = changeTime( allTime )
         print('========任务结束:用时 %s=============' % usedTime )
-        
+
     def craw_detail_page(self):
         item_urls = self.product_urls.getAllUrls()
+        pdc_urls = self.product_urls.getAllUrls()
 
         csvfile = open(root_path + '/files/data.csv', 'w', newline='')
         writer = csv.writer(csvfile)
@@ -60,6 +61,7 @@ class SpiderMain(object):
 
         count = 0
         while self.product_urls.hasUrl():
+        #while count != len( pdc_urls ):
             # 延时执行
             time.sleep( random.randint(2,12) )
             item_url = self.product_urls.getUrl()
