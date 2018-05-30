@@ -92,11 +92,16 @@ def parse_detail(content=None , filename=None ,detail_page_url=None ,writer=None
 
     # price
     price_node = soup.find('table',class_='table-sku').find('td',class_='price').find('em',class_='value')
-    res['price'] = price_node.get_text()
+    if( len(price_node)!=0 ):
+        res['price'] = price_node.get_text()
+    else:
+        price_node = soup.find('div',class_='price-discount-sku').find('span',class_='value')
+        if(len(price_node)!=0):
+            res['price'] = price_node.get_text()
 
     #supplier
     supplier_node = soup.find('a',class_='company-name')
-    res['supplier'] = supplier_node.get_text()
+    res['supplier'] =  supplier_node.get_text()
 
     #shipping district
     res['delivery-addr'] = soup.find('span',class_='delivery-addr').get_text()
@@ -113,7 +118,8 @@ def parse_detail(content=None , filename=None ,detail_page_url=None ,writer=None
     size_nodes = soup.find('table', class_='table-sku').find_all('td', class_='name')
     for td in size_nodes:
         size_span = td.find('span')
-        res['sizes'].append( size_span.get_text() )
+        if( len(size_span) != 0 ):
+            res['sizes'].append( size_span.get_text() )
 
     res['sizes'] = ','.join(res['sizes'])
 
@@ -172,7 +178,7 @@ def get_description_pics(html,filename):
     #详情页url
     print(imgs.attrs['data-tfs-url'])
 
-    retry_count = 5
+    retry_count = 3
 
     proxy = get_proxy()
     try:
@@ -193,9 +199,6 @@ def get_description_pics(html,filename):
             url = url.replace('\"', '')
             temp.append(url)
 
-        # reg = r'(https.*?\.jpg)'
-        # image = re.compile(reg)
-        # imgList = re.findall(image, content)
         print('========img list=====================================================')
         print(temp)
 

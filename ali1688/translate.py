@@ -19,5 +19,3 @@ def startTranslate():
     writer = csv.writer(new_csv)
     writer.writerows(lines)
     new_csv.close()
-
-startTranslate()

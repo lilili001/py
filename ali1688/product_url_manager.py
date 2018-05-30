@@ -27,6 +27,6 @@ class ProductUrlManager(object):
 
     def getAllUrls(self):
         print("========getAllUrls()方法============")
-        print(self.item_urls)
+        print(self.item_urls )
 
         return self.item_urls

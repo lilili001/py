@@ -7,6 +7,7 @@ import random
 import time
 import os
 from ali1688 import list_url_manager,product_url_manager,html_downloader,html_outputer,html_parser, detail_craw
+from ali1688.helper import changeTime
 
 root_path = os.path.abspath('.')
 
@@ -43,32 +44,14 @@ class SpiderMain(object):
             count = count+1
 
         print("=====================开始爬详情页咯===========================")
-        nowTime = datetime.datetime.now()
-
+        startTime = datetime.datetime.now()
         self.craw_detail_page()
-
         endTime = datetime.datetime.now()
-        used_time = self.changeTime( ( endTime - nowTime ).seconds )
-        print('==========任务结束,用时%s==============' % (used_time))
-
-    def changeTime(self,allTime):
-        day = 24 * 60 * 60
-        hour = 60 * 60
-        min = 60
-        if allTime < 60:
-            return "%d sec" % math.ceil(allTime)
-        elif allTime > day:
-            days = divmod(allTime, day)
-            return "%d days, %s" % (int(days[0]), self.changeTime(days[1]))
-        elif allTime > hour:
-            hours = divmod(allTime, hour)
-            return '%d hours, %s' % (int(hours[0]), self.changeTime(hours[1]))
-        else:
-            mins = divmod(allTime, min)
-            return "%d mins, %d sec" % (int(mins[0]), math.ceil(mins[1]))
+        allTime = (endTime-startTime).seconds
+        usedTime = changeTime( allTime )
+        print('========任务结束:用时 %s=============' % usedTime )
         
     def craw_detail_page(self):
-        parser=html_parser.HtmlParser()
         item_urls = self.product_urls.getAllUrls()
 
         csvfile = open(root_path + '/files/data.csv', 'w', newline='')
@@ -76,32 +59,22 @@ class SpiderMain(object):
         writer.writerow(('title', 'price', 'filedir', 'supplier', 'colors', 'sizes', 'delivery-addr' ,'supplier_url' ,'title_translate','colors_translate' ))
 
         count = 0
-
         while self.product_urls.hasUrl():
-
             # 延时执行
             time.sleep( random.randint(2,12) )
-
             item_url = self.product_urls.getUrl()
             nowTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             count = count + 1
-            print('craw detail page %d : %s time is : %s' % (count, item_url, nowTime))
-
+            print('\n[[==================craw detail page %d : %s time is : %s' % (count, item_url, nowTime))
             detail_craw.getHtml( item_url , writer )
 
-            if count == 2:
-                break
-
-            # item_page_content = self.downloader.download(item_url)
-            #
-            # ##获取所需要的数据  title price qty images  属性
-            # res_content = parser.parseDetailPage(item_page_content)
-            # self.outputer.outputDetailPage(res_content)
+            # if count == 2:
+            #     break
 
         csvfile.close()
 
 if __name__ == "__main__":
-    list_urls = ["https://ruiyige.1688.com/page/offerlist.htm?pageNum={}".format(str(i)) for i in range(1,2)]
+    list_urls = ["https://ruiyige.1688.com/page/offerlist_91223991.htm?pageNum={}".format(str(i)) for i in range(1,17)]
     spider001 = SpiderMain()
     spider001.craw(list_urls)
 

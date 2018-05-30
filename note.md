@@ -262,3 +262,12 @@ googletrans,datetime
     writer = csv.writer(new_csv)
     writer.writerows(lines)
     new_csv.close()
+
+# tesseract-ocr windows
+    tesseract-ocr windows 安装方法：
+    https://blog.csdn.net/wei_ai_ni/article/details/76163856
+
+    然后环境变量的设置：
+    https://www.cnblogs.com/jianqingwang/p/6978724.html
+
+    不需要visualstudio
