@@ -259,12 +259,18 @@ def changeTime(allTime):
 # out = re.sub(pattern , '',str )
 # print(out) #女装背带性感伴娘晚礼服 交叉露背亮片连衣裙
 
-f = open('test.csv','a',newline='')
-writer = csv.writer(f)
-writer.writerow(('name','age'))
-f.close()
+# f = open('test.csv','a',newline='')
+# writer = csv.writer(f)
+# writer.writerow(('name','age'))
+# f.close()
+#
+# f1 = open('test.csv','a',newline='')
+# writer1 = csv.writer(f1)
+# writer1.writerow(('alice','12'))
+# f1.close()
 
-f1 = open('test.csv','a',newline='')
-writer1 = csv.writer(f1)
-writer1.writerow(('alice','12'))
-f1.close()
+str = 'https://detail.1688.com/offer/565656229629.html'
+reg = r'offer/(.*?).html'
+pattern = re.compile(reg)
+out = re.findall(pattern,str)
+print(out[0])

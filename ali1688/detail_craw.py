@@ -46,7 +46,12 @@ def getHtml(detail_page_url ,writer ):
 
         #print(content)
 
-        filename = time.strftime("%Y%m%d-%H%M%S", time.localtime())
+        #filename = time.strftime("%Y%m%d-%H%M%S", time.localtime())
+
+        reg = r'offer/(.*?).html'
+        pattern = re.compile(reg)
+        out = re.findall(pattern, detail_page_url)
+        filename = out[0]
 
         # 将数据写入csv
 
@@ -84,13 +89,14 @@ def parse_detail(content=None , filename=None ,detail_page_url=None ,writer=None
 
     # price
     price_node = soup.find('table',class_='table-sku').find('td',class_='price').find('em',class_='value')
-    if( len(price_node)!=0 ):
+    if( price_node is not None and len(price_node)!=0 ):
         res['price'] = price_node.get_text()
     else:
         price_node = soup.find('div',class_='price-discount-sku').find('span',class_='value')
-        if(len(price_node)!=0):
+        if( price_node is not None and len(price_node)!=0):
             res['price'] = price_node.get_text()
-
+        else:
+            res['price'] = 'null'
     #supplier
     supplier_node = soup.find('a',class_='company-name')
     res['supplier'] =  supplier_node.get_text()
@@ -145,8 +151,8 @@ def get_main_pics(html,filename):
     print( '主图数量 %s' % len( lis ) )
     #创建商品图片文件目录 以及详情图片文件夹
 
-    os.makedirs('F:/laragon/www/python/image/%s/400' % filename)
-    os.makedirs('F:/laragon/www/python/image/%s/800' % filename)
+    os.makedirs(root_path+'/image/%s/400' % filename)
+    os.makedirs(root_path+'/image/%s/800' % filename)
 
     count = 0
     for li in lis:
@@ -155,8 +161,8 @@ def get_main_pics(html,filename):
         preview_url = json_obj['preview']
         original_url = json_obj['original']
 
-        urlretrieve(preview_url, 'F:/laragon/www/python/image/%s/400/%s.jpg' % (filename,count))
-        urlretrieve(original_url, 'F:/laragon/www/python/image/%s/800/%s.jpg' % (filename,count))
+        urlretrieve(preview_url, root_path+'/image/%s/400/%s.jpg' % (filename,count))
+        urlretrieve(original_url, root_path+'/image/%s/800/%s.jpg' % (filename,count))
 
 
 # 获取详情页描述的所有图片
@@ -194,11 +200,11 @@ def get_description_pics(html,filename):
         print('========img list=====================================================')
         print(temp)
 
-        os.makedirs('F:/laragon/www/python/image/%s/detail' % filename)
+        os.makedirs(root_path+'/image/%s/detail' % filename)
         i = 0
         for detail_img in temp:
             i = i + 1
-            urlretrieve(detail_img, 'F:/laragon/www/python/image/%s/detail/%s.jpg' % (filename, i))
+            urlretrieve(detail_img, root_path+'/image/%s/detail/%s.jpg' % (filename, i))
 
         print('=====详情图片列表===================================\n')
         print(imgList)

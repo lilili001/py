@@ -23,7 +23,7 @@ class SpiderMain(object):
 
     def craw(self, list_urls):
         #目标 爬取所有的列表页
-        urlsFromFile = self.product_urls.getAllUrlsFromFile()
+        #urlsFromFile = self.product_urls.getAllUrlsFromFile()
 
         #if len( urlsFromFile)  == 0:
         parser = html_parser.HtmlParser()
@@ -59,7 +59,7 @@ class SpiderMain(object):
 
         print('=====共有产品%s个=========================' % len(pdc_urls))
 
-        count = 56
+        count = 96
         csvfile = open(root_path + '/files/data.csv', 'a', newline='')
         writer = csv.writer(csvfile)
 
@@ -86,4 +86,5 @@ if __name__ == "__main__":
     list_urls = ["https://ruiyige.1688.com/page/offerlist_91223991.htm?pageNum={}".format(str(i)) for i in range(1,18)]
     spider001 = SpiderMain()
     spider001.craw(list_urls)
+
 
