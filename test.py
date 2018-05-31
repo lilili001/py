@@ -245,16 +245,26 @@ def changeTime(allTime):
         return "%d mins, %d sec"%(int(mins[0]),math.ceil(mins[1]))
 
 
-start = datetime.datetime.now()
-time.sleep(5)
-end = datetime.datetime.now()
-end2 = start + datetime.timedelta(hours=10.5)
+# start = datetime.datetime.now()
+# time.sleep(5)
+# end = datetime.datetime.now()
+# end2 = start + datetime.timedelta(hours=10.5)
+#
+# used_time = (end2-start)
+# alltime = used_time.seconds
+#
+# str = "促销 女装背带性感伴娘晚礼服 交叉露背亮片Wish连衣裙"
+# reg = r'[促销|wish]'
+# pattern = re.compile(reg,re.IGNORECASE)
+# out = re.sub(pattern , '',str )
+# print(out) #女装背带性感伴娘晚礼服 交叉露背亮片连衣裙
 
-used_time = (end2-start)
-alltime = used_time.seconds
+f = open('test.csv','a',newline='')
+writer = csv.writer(f)
+writer.writerow(('name','age'))
+f.close()
 
-str = "促销 女装背带性感伴娘晚礼服 交叉露背亮片Wish连衣裙"
-reg = r'[促销|wish]'
-pattern = re.compile(reg,re.IGNORECASE)
-out = re.sub(pattern , '',str )
-print(out) #女装背带性感伴娘晚礼服 交叉露背亮片连衣裙
+f1 = open('test.csv','a',newline='')
+writer1 = csv.writer(f1)
+writer1.writerow(('alice','12'))
+f1.close()

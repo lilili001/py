@@ -41,13 +41,10 @@ def getHtml(detail_page_url ,writer ):
     try:
         print('======start detail craw %s======================\n' % (retry_count) )
         html = requests.get(detail_page_url, proxies={"http":"http://{}".format(proxy) } ,headers=headers )
+
         content = html.text
 
         #print(content)
-
-        #print('===========content below====================\n')
-
-        #content = open(root_path + '/ali1688/files/detail.txt', encoding='utf-8').read()
 
         filename = time.strftime("%Y%m%d-%H%M%S", time.localtime())
 
@@ -64,7 +61,7 @@ def getHtml(detail_page_url ,writer ):
 
         err_file = open('error_list','w')
         err_file.write( detail_page_url+'\n' )
-
+        print(e)
         print(e.errno, ":", e.reason)
 
         retry_count -= 1
@@ -81,7 +78,9 @@ def parse_detail(content=None , filename=None ,detail_page_url=None ,writer=None
 
     # title
     title_node = soup.find('h1', class_="d-title")
-    res['title'] = str_replace_new(title_node.get_text())
+    print(title_node)
+    if ( title_node is not None and  len(title_node) != 0):
+        res['title'] = str_replace_new(title_node.get_text())
 
     # price
     price_node = soup.find('table',class_='table-sku').find('td',class_='price').find('em',class_='value')

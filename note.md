@@ -251,10 +251,10 @@ lock的作用是 当多个进程同时进行的时候 让进程按顺序执行 �
     alltime = used_time.seconds
     print(changeTime(alltime))
 
-# 使用模块
+## 使用模块
 googletrans,datetime
 
-# csv 文件读取
+## csv 文件读取
     r = csv.reader(open('files/data.csv')) # 返回列表
 
   文件写入
@@ -263,7 +263,7 @@ googletrans,datetime
     writer.writerows(lines)
     new_csv.close()
 
-# tesseract-ocr windows
+## tesseract-ocr windows
     tesseract-ocr windows 安装方法：
     https://blog.csdn.net/wei_ai_ni/article/details/76163856
 
@@ -272,7 +272,7 @@ googletrans,datetime
 
     不需要visualstudio
 
-# 正则替换
+## 正则替换
     str = "促销 女装背带性感伴娘晚礼服 交叉露背亮片Wish连衣裙"
     reg = r'[促销|wish]'
     pattern = re.compile(reg,re.IGNORECASE)

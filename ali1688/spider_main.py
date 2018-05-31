@@ -23,13 +23,15 @@ class SpiderMain(object):
 
     def craw(self, list_urls):
         #目标 爬取所有的列表页
+        urlsFromFile = self.product_urls.getAllUrlsFromFile()
 
+        #if len( urlsFromFile)  == 0:
         parser = html_parser.HtmlParser()
 
         count = 0
         self.list_urls.addUrls(list_urls)
 
-        while self.list_urls.hasUrl():
+        while self.list_urls.hasUrl() :
 
             list_url = self.list_urls.getUrl()
             print('craw %d : %s' % (count, list_url))
@@ -39,9 +41,9 @@ class SpiderMain(object):
             item_urls = parser.parse(content) #获取当前列表页的产品url
             self.product_urls.addUrls(item_urls)
 
-            if count == 2:
-                break
-            count = count+1
+            # if count == 2:
+            #     break
+            # count = count+1
 
         print("=====================开始爬详情页咯===========================")
         startTime = datetime.datetime.now()
@@ -52,19 +54,24 @@ class SpiderMain(object):
         print('========任务结束:用时 %s=============' % usedTime )
 
     def craw_detail_page(self):
-        item_urls = self.product_urls.getAllUrls()
+        #item_urls = self.product_urls.getAllUrls()
         pdc_urls = self.product_urls.getAllUrls()
 
-        csvfile = open(root_path + '/files/data.csv', 'w', newline='')
-        writer = csv.writer(csvfile)
-        writer.writerow(('title', 'price', 'filedir', 'supplier', 'colors', 'sizes', 'delivery-addr' ,'supplier_url' ,'title_translate','colors_translate' ))
+        print('=====共有产品%s个=========================' % len(pdc_urls))
 
-        count = 0
+        count = 56
+        csvfile = open(root_path + '/files/data.csv', 'a', newline='')
+        writer = csv.writer(csvfile)
+
+        if count == 0:
+            writer.writerow(('title', 'price', 'filedir', 'supplier', 'colors', 'sizes', 'delivery-addr' ,'supplier_url' ,'title_translate','colors_translate' ))
+
         while self.product_urls.hasUrl():
-        #while count != len( pdc_urls ):
+            #while count != len( pdc_urls ):
             # 延时执行
             time.sleep( random.randint(2,12) )
             item_url = self.product_urls.getUrl()
+            #item_url = pdc_urls[count]
             nowTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             count = count + 1
             print('\n[[==================craw detail page %d : %s time is : %s' % (count, item_url, nowTime))
@@ -76,7 +83,7 @@ class SpiderMain(object):
         csvfile.close()
 
 if __name__ == "__main__":
-    list_urls = ["https://ruiyige.1688.com/page/offerlist_91223991.htm?pageNum={}".format(str(i)) for i in range(1,17)]
+    list_urls = ["https://ruiyige.1688.com/page/offerlist_91223991.htm?pageNum={}".format(str(i)) for i in range(1,18)]
     spider001 = SpiderMain()
     spider001.craw(list_urls)
 

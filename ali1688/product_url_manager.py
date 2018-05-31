@@ -14,8 +14,11 @@ class ProductUrlManager(object):
     def addUrl(self, url):
         print("========进入addUrl()方法============")
         print(url)
+        f = open('files/product_urls','a')
         if url not in self.item_urls and url not in self.crawed_item_urls:
             self.item_urls.add(url)
+            f.write(url+'\n')
+        f.close()
 
     def hasUrl(self):
         return len(self.item_urls) > 0
@@ -23,6 +26,7 @@ class ProductUrlManager(object):
     def getUrl(self):
         url = self.item_urls.pop()
         self.crawed_item_urls.add(url)
+
         return url
 
     def getAllUrls(self):
