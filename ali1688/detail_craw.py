@@ -5,7 +5,7 @@ import json
 import re
 import time
 from urllib.request import urlretrieve
-import demjson
+
 import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
@@ -31,7 +31,7 @@ def delete_proxy(proxy):
 # writer = csv.writer(csvfile)
 # writer.writerow(('title', 'price', 'filedir' ,'supplier' , 'colors' , 'sizes' , 'delivery-addr' ))
 
-def getHtml(detail_page_url ,writer ):
+def getHtml(detail_page_url ,writer , spidername ):
 
     headers = {'User-Agent': ua.random}
     retry_count = 3
@@ -55,9 +55,9 @@ def getHtml(detail_page_url ,writer ):
 
         # 将数据写入csv
 
-        parse_detail( content,filename, detail_page_url , writer )
-        get_main_pics(content, filename)
-        get_description_pics(content,filename)
+        parse_detail( content,filename, detail_page_url , writer  )
+        get_main_pics(content, filename ,spidername )
+        get_description_pics(content,filename ,spidername )
 
         # 使用代理访问
         return content
@@ -77,6 +77,8 @@ def getHtml(detail_page_url ,writer ):
 
 def parse_detail(content=None , filename=None ,detail_page_url=None ,writer=None ):
     #content = open(root_path+'/ali1688/files/detail.txt' ,encoding='utf-8' ).read()
+
+    print(content)
 
     soup = BeautifulSoup(content, 'html.parser' )
     res = {}
@@ -121,6 +123,35 @@ def parse_detail(content=None , filename=None ,detail_page_url=None ,writer=None
 
     res['sizes'] = ','.join(res['sizes'])
 
+
+    #买家保障
+    res['garantee'] = []
+    garantees = soup.find('div',class_='mod-detail-guarantee').find_all('div',class_='guarantee-type-consignment')
+
+    for garantee in garantees:
+        node = garantee.find('a')
+        if( node is not None and len( node )>0):
+            res['garantee'].append( node.get_text() )
+
+    res['garantee'] = ','.join(res['garantee'])
+
+    #混批说明
+    res['hunpi'] = ''
+    # hunpiNode = soup.find('div',class_='de-blockbk-mix').find('em',class_='de-hunpi-des')
+    # if (hunpiNode is not None and len(hunpiNode) > 0):
+    #     res['hunpi'] = hunpiNode.get_text()
+
+    #规格说明
+    res['guige'] = {}
+    feature_nodes = soup.find('div',id='mod-detail-attributes').find_all('td',class_='de-feature')
+    for feature_node in feature_nodes:
+        value_node = feature_node.next_sibling()
+        if( value_node is not None and len(value_node) > 0 ):
+            res['guige'][ feature_node.get_text() ] = value_node
+
+
+    print(res['guige'])
+
     writer.writerow((
                      res['title'],
                      res['price'],
@@ -130,6 +161,9 @@ def parse_detail(content=None , filename=None ,detail_page_url=None ,writer=None
                      res['sizes'] ,
                      res['delivery-addr'],
                      detail_page_url,
+                     res['garantee'],
+                     res['hunpi'],
+                     str( res['guige'] )
      ))
 
     print(res)
@@ -143,7 +177,7 @@ def getImg(html):
     return imglist
 
 #获取详情页主图图片
-def get_main_pics(html,filename):
+def get_main_pics(html,filename,spidername):
     soup = BeautifulSoup(html, 'html.parser' )
     lis = soup.find('div',id='dt-tab').find_all('li',class_='tab-trigger')
 
@@ -151,8 +185,11 @@ def get_main_pics(html,filename):
     print( '主图数量 %s' % len( lis ) )
     #创建商品图片文件目录 以及详情图片文件夹
 
-    os.makedirs(root_path+'/image/%s/400' % filename)
-    os.makedirs(root_path+'/image/%s/800' % filename)
+    if os.path.exists( root_path+'/%s/%s/400' % ( spidername ,filename ) ) == False:
+        os.makedirs(root_path+'/%s/%s/400' % ( spidername ,filename ) )
+
+    if os.path.exists(root_path + '/%s/%s/800' % (spidername, filename)) == False:
+        os.makedirs(root_path+'/%s/%s/800' % ( spidername ,filename ))
 
     count = 0
     for li in lis:
@@ -161,12 +198,15 @@ def get_main_pics(html,filename):
         preview_url = json_obj['preview']
         original_url = json_obj['original']
 
-        urlretrieve(preview_url, root_path+'/image/%s/400/%s.jpg' % (filename,count))
-        urlretrieve(original_url, root_path+'/image/%s/800/%s.jpg' % (filename,count))
+        if  os.path.isfile(root_path+'/%s/%s/400/%s.jpg' % ( spidername, filename,count)) == False:
+            urlretrieve(preview_url, root_path+'/%s/%s/400/%s.jpg' % ( spidername, filename,count))
+
+        if os.path.isfile(root_path + '/%s/%s/800/%s.jpg' % (spidername, filename, count)) == False:
+            urlretrieve(original_url, root_path+'/%s/%s/800/%s.jpg' % ( spidername,filename,count))
 
 
 # 获取详情页描述的所有图片
-def get_description_pics(html,filename):
+def get_description_pics(html,filename, spidername):
     headers = {
         'User-Agent': ua.random
     }
@@ -200,11 +240,12 @@ def get_description_pics(html,filename):
         print('========img list=====================================================')
         print(temp)
 
-        os.makedirs(root_path+'/image/%s/detail' % filename)
+        os.makedirs(root_path+'/%s/%s/detail' % filename)
         i = 0
         for detail_img in temp:
             i = i + 1
-            urlretrieve(detail_img, root_path+'/image/%s/detail/%s.jpg' % (filename, i))
+            if os.path.isfile(root_path+'/%s/%s/detail/%s.jpg' % ( spidername,filename, i)) == False:
+                urlretrieve(detail_img, root_path+'/%s/%s/detail/%s.jpg' % ( spidername,filename, i))
 
         print('=====详情图片列表===================================\n')
         print(imgList)

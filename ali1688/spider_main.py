@@ -9,41 +9,48 @@ import os
 from ali1688 import list_url_manager,product_url_manager,html_downloader,html_outputer,html_parser, detail_craw
 from ali1688.helper import changeTime
 
+import redis
+import time
+
+
 root_path = os.path.abspath('.')
 
 class SpiderMain(object):
 
     def __init__(self):
+        self.spidername = 'alice'
+
+
+        pool=redis.ConnectionPool(host='localhost', port=6379, decode_responses=True)
+        self.r=redis.Redis(connection_pool=pool)
 
         self.list_urls = list_url_manager.ListUrlManager()
-        self.product_urls = product_url_manager.ProductUrlManager()
+        self.product_urls = product_url_manager.ProductUrlManager(self.spidername,self.r)
         self.downloader = html_downloader.HtmlDownloader()
         #self.parser=html_parser.HtmlParser()
         self.outputer = html_outputer.HtmlOutputer()
 
     def craw(self, list_urls):
         #目标 爬取所有的列表页
-        #urlsFromFile = self.product_urls.getAllUrlsFromFile()
 
-        #if len( urlsFromFile)  == 0:
-        parser = html_parser.HtmlParser()
+        #如果redis缓存里有就不用再重新爬一次列表页来获取产品urls了
+        if( self.product_urls.hasUrl() == False ):
 
-        count = 0
-        self.list_urls.addUrls(list_urls)
+            parser = html_parser.HtmlParser()
 
-        while self.list_urls.hasUrl() :
+            count = 0
+            self.list_urls.addUrls(list_urls)
 
-            list_url = self.list_urls.getUrl()
-            print('craw %d : %s' % (count, list_url))
+            while self.list_urls.hasUrl() :
 
-            content = self.downloader.download(list_url)
+                list_url = self.list_urls.getUrl()
+                print('craw %d : %s' % (count, list_url))
 
-            item_urls = parser.parse(content) #获取当前列表页的产品url
-            self.product_urls.addUrls(item_urls)
+                content = self.downloader.download(list_url)
 
-            # if count == 2:
-            #     break
-            # count = count+1
+                item_urls = parser.parse(content) #获取当前列表页的产品url
+                self.product_urls.addUrls(item_urls)
+
 
         print("=====================开始爬详情页咯===========================")
         startTime = datetime.datetime.now()
@@ -54,17 +61,16 @@ class SpiderMain(object):
         print('========任务结束:用时 %s=============' % usedTime )
 
     def craw_detail_page(self):
-        #item_urls = self.product_urls.getAllUrls()
-        pdc_urls = self.product_urls.getAllUrls()
+        #pdc_urls = self.product_urls.getAllUrls()
 
-        print('=====共有产品%s个=========================' % len(pdc_urls))
-
-        count = 96
-        csvfile = open(root_path + '/files/data.csv', 'a', newline='')
+        count = 0
+        csvfile = open(root_path + '/files/data-%s.csv' % (  self.spidername ), 'a', newline='')
         writer = csv.writer(csvfile)
 
         if count == 0:
-            writer.writerow(('title', 'price', 'filedir', 'supplier', 'colors', 'sizes', 'delivery-addr' ,'supplier_url' ,'title_translate','colors_translate' ))
+            writer.writerow(('title', 'price', 'filedir', 'supplier', 'colors', 'sizes', 'delivery-addr' ,'supplier_url' ,'garantee','hunpi_des','guige',
+
+                             'title_translate','colors_translate' ))
 
         while self.product_urls.hasUrl():
             #while count != len( pdc_urls ):
@@ -75,15 +81,15 @@ class SpiderMain(object):
             nowTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             count = count + 1
             print('\n[[==================craw detail page %d : %s time is : %s' % (count, item_url, nowTime))
-            detail_craw.getHtml( item_url , writer )
+            detail_craw.getHtml( item_url , writer ,self.spidername )
 
-            # if count == 2:
-            #     break
+            if count == 2:
+                break
 
         csvfile.close()
 
 if __name__ == "__main__":
-    list_urls = ["https://ruiyige.1688.com/page/offerlist_91223991.htm?pageNum={}".format(str(i)) for i in range(1,18)]
+    list_urls = ["https://ruiyige.1688.com/page/offerlist_91223991.htm?pageNum={}".format(str(i)) for i in range(1,2)]
     spider001 = SpiderMain()
     spider001.craw(list_urls)
 

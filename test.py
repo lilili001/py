@@ -5,7 +5,6 @@ import re
 import time
 from urllib.request import urlretrieve
 
-import demjson
 import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
@@ -34,12 +33,7 @@ class Chinese(People):
     pass
 
 
-if __name__ =="__main__":
-    #cn = Chinese()
-    # print(cn.dwell)
-    # cn.think()
-
-    ua = UserAgent()
+ua = UserAgent()
 
 ################################################################################################################
 def get_proxy():
@@ -201,11 +195,12 @@ def get_description_pics(html,filename):
 proxy = get_proxy()
 # getHtml()
 
-# headers = {
-#         'User-Agent': ua.random
-#     }
-# content = requests.get('https://img.alicdn.com/tfscom/TB1K0fbkN9YBuNjy0FfXXXIsVXa', proxies={"http": proxy } ,headers=headers ).content
-# content = content.decode('gbk')
+headers = {
+        'User-Agent': ua.random
+    }
+content = requests.get('https://detail.1688.com/offer/563993845735.html', proxies={"http": proxy } ,headers=headers ).content
+content = content.decode('gbk')
+print(content)
 #
 # soup = BeautifulSoup(content,'html.parser')
 # imgList = soup.find_all('img',src=re.compile(r'jpg'))
@@ -216,7 +211,7 @@ proxy = get_proxy()
 #     url = url.replace('\"','')
 #     temp.append(url)
 #
-# print(temp)
+# print(temp)R
 
 # str = '中华人名共和国'
 #
@@ -269,8 +264,8 @@ def changeTime(allTime):
 # writer1.writerow(('alice','12'))
 # f1.close()
 
-str = 'https://detail.1688.com/offer/565656229629.html'
-reg = r'offer/(.*?).html'
-pattern = re.compile(reg)
-out = re.findall(pattern,str)
-print(out[0])
+# str = 'https://detail.1688.com/offer/565656229629.html'
+# reg = r'offer/(.*?).html'
+# pattern = re.compile(reg)
+# out = re.findall(pattern,str)
+# print(out[0])
