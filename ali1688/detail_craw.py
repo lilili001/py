@@ -3,13 +3,14 @@
 import datetime
 import json
 import re
+import socket
 import time
 from urllib.request import urlretrieve
 
 import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
-from urllib import error
+from urllib import error, request
 import os
 import csv
 
@@ -33,14 +34,25 @@ def delete_proxy(proxy):
 
 def getHtml(detail_page_url ,writer , spidername ):
 
-    headers = {'User-Agent': ua.random}
-    retry_count = 3
+    retry_count = 5
 
-    proxy = get_proxy()
-
+    #proxy = get_proxy()
+    headers = {
+        'User-Agent': ua.random
+    }
     try:
         print('======start detail craw %s======================\n' % (retry_count) )
-        html = requests.get(detail_page_url, proxies={"http":"http://{}".format(proxy) } ,headers=headers )
+        #html = requests.get(detail_page_url, proxies={"http":"http://{}".format(proxy) } ,headers=headers )
+        html = requests.get(detail_page_url, headers=headers )
+
+
+        # proxy_handler = request.ProxyHandler({"http": "http://{}".format(proxy)})
+        # opener = request.build_opener(proxy_handler)
+        # req = request.Request(detail_page_url)
+        # req.add_header('User-Agent', ua.random)
+        # r = opener.open(req)
+        # content = r.read().decode('gbk')
+        # r.close()
 
         content = html.text
 
@@ -59,6 +71,8 @@ def getHtml(detail_page_url ,writer , spidername ):
         get_main_pics(content, filename ,spidername )
         get_description_pics(content,filename ,spidername )
 
+
+
         # 使用代理访问
         return content
     except error.URLError as e:
@@ -72,7 +86,7 @@ def getHtml(detail_page_url ,writer , spidername ):
         retry_count -= 1
     # 出错5次, 删除代理池中代理
     print(retry_count)
-    delete_proxy(proxy)
+    #delete_proxy(proxy)
     return None
 
 def parse_detail(content=None , filename=None ,detail_page_url=None ,writer=None ):
@@ -143,11 +157,12 @@ def parse_detail(content=None , filename=None ,detail_page_url=None ,writer=None
 
     #规格说明
     res['guige'] = {}
-    feature_nodes = soup.find('div',id='mod-detail-attributes').find_all('td',class_='de-feature')
-    for feature_node in feature_nodes:
-        value_node = feature_node.next_sibling()
-        if( value_node is not None and len(value_node) > 0 ):
-            res['guige'][ feature_node.get_text() ] = value_node
+    # feature_nodes = soup.find('div',id='mod-detail-attributes').find_all('td',class_='de-feature')
+    # for feature_node in feature_nodes:
+    #     if( feature_node is not None and len(feature_node) > 0 ):
+    #         value_node = feature_node.next_sibling()
+    #         if( value_node is not None and len(value_node) > 0 ):
+    #             res['guige'][ feature_node.get_text() ] = value_node
 
 
     print(res['guige'])
@@ -178,6 +193,7 @@ def getImg(html):
 
 #获取详情页主图图片
 def get_main_pics(html,filename,spidername):
+
     soup = BeautifulSoup(html, 'html.parser' )
     lis = soup.find('div',id='dt-tab').find_all('li',class_='tab-trigger')
 
@@ -207,6 +223,7 @@ def get_main_pics(html,filename,spidername):
 
 # 获取详情页描述的所有图片
 def get_description_pics(html,filename, spidername):
+
     headers = {
         'User-Agent': ua.random
     }
@@ -218,10 +235,11 @@ def get_description_pics(html,filename, spidername):
 
     retry_count = 3
 
-    proxy = get_proxy()
+    #proxy = get_proxy()
     try:
         print('========try=================================================')
-        content = requests.get(url_imgs, proxies={"http": proxy } ,headers=headers ).content
+        #content = requests.get(url_imgs, proxies={"http": proxy } ,headers=headers ).content
+        content = requests.get(url_imgs,  headers=headers ).content
         print('========detail content=====================================================')
         print(content)
         # content = open( root_path+'/ali1688/files/detail_pics.txt' , 'rb' ).read()
@@ -240,7 +258,7 @@ def get_description_pics(html,filename, spidername):
         print('========img list=====================================================')
         print(temp)
 
-        os.makedirs(root_path+'/%s/%s/detail' % filename)
+        os.makedirs(root_path+'/%s/%s/detail' % (spidername,filename))
         i = 0
         for detail_img in temp:
             i = i + 1
@@ -257,7 +275,7 @@ def get_description_pics(html,filename, spidername):
         print(e.errno, ":", e.reason , " url:" , imgs.attrs['data-tfs-url'] )
         retry_count -= 1
 
-    delete_proxy(proxy)
+    #delete_proxy(proxy)
     return None
 
 #getHtml()
