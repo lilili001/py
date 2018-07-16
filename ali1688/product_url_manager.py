@@ -1,5 +1,5 @@
 import redis
-
+import re
 
 class ProductUrlManager(object):
     def __init__(self,name ,redis):
